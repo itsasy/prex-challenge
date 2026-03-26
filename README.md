@@ -1,6 +1,7 @@
 # Prex Challenge - GIF API (Hexagonal + DDD)
 
 API REST para búsqueda y gestión de GIFs con integración a GIPHY, autenticación OAuth2.0 y auditoría completa.
+**Repositorio:** [https://github.com/itsasy/prex-challenge](https://github.com/itsasy/prex-challenge)
 
 ## Tecnologías
 
