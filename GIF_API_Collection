@@ -1,0 +1,380 @@
+{
+  "info": {
+    "_postman_id": "31211320-c4c9-42f9-8d50-46cb7fa30499",
+    "name": "Prex-app",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30197727",
+    "_collection_link": "https://go.postman.co/collection/30197727-31211320-c4c9-42f9-8d50-46cb7fa30499?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Create account",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "api.giphy.com/v1/gifs/trending?api_key=Fuezxv7poHUQbdVD9d67S1cl6oW3HKXm",
+              "host": [
+                "api",
+                "giphy",
+                "com"
+              ],
+              "path": [
+                "v1",
+                "gifs",
+                "trending"
+              ],
+              "query": [
+                {
+                  "key": "api_key",
+                  "value": "Fuezxv7poHUQbdVD9d67S1cl6oW3HKXm",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    if (jsonData.access_token) {\r",
+                  "        pm.collectionVariables.set(\"auth_token\", jsonData.access_token);\r",
+                  "        console.log(\"Token saved in the collection variable\");\r",
+                  "    } else {\r",
+                  "        console.warn(\"Login succeeded but no access_token found in response\");\r",
+                  "    }\r",
+                  "} else {\r",
+                  "    console.error(\"Login failed\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "prex-challenge.test/api/login",
+              "host": [
+                "prex-challenge",
+                "test"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Gif",
+      "item": [
+        {
+          "name": "Get Gifs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    if (jsonData.data && jsonData.data.length > 0) {\r",
+                  "        pm.collectionVariables.set(\"searched_gif\", jsonData.data[0].id);\r",
+                  "        console.log(\"Searched GIF saved in the collection variable\");\r",
+                  "    } else {\r",
+                  "        console.warn(\"No GIFs found in the response\");\r",
+                  "    }\r",
+                  "} else {\r",
+                  "    console.error(\"Search failed\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "prex-challenge.test/api/gifs/search?query=cat&limit=5",
+              "host": [
+                "prex-challenge",
+                "test"
+              ],
+              "path": [
+                "api",
+                "gifs",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "cat"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search gif",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "prex-challenge.test/api/gifs/{{searched_gif}}",
+              "host": [
+                "prex-challenge",
+                "test"
+              ],
+              "path": [
+                "api",
+                "gifs",
+                "{{searched_gif}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Favorites",
+      "item": [
+        {
+          "name": "Favorites",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "prex-challenge.test/api/favorites",
+              "host": [
+                "prex-challenge",
+                "test"
+              ],
+              "path": [
+                "api",
+                "favorites"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Favorite",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"gif_id\": \"{{searched_gif}}\",\r\n    \"alias\": \"My favorite gif\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "prex-challenge.test/api/favorites",
+              "host": [
+                "prex-challenge",
+                "test"
+              ],
+              "path": [
+                "api",
+                "favorites"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Favorite",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "prex-challenge.test/api/favorites/{{favorite_id}}",
+              "host": [
+                "prex-challenge",
+                "test"
+              ],
+              "path": [
+                "api",
+                "favorites",
+                "{{favorite_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete favorite",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "prex-challenge.test/api/favorites/{{favorite_id}}",
+              "host": [
+                "prex-challenge",
+                "test"
+              ],
+              "path": [
+                "api",
+                "favorites",
+                "{{favorite_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "auth_token",
+      "value": ""
+    },
+    {
+      "key": "searched_gif",
+      "value": ""
+    },
+    {
+      "key": "favorite_id",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
